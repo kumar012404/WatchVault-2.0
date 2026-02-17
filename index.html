@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WatchVault - Track Your Anime Journey</title>
+    <meta name="description"
+        content="Track your anime watching progress with season-based tracking, poster uploads, and smart search">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <link rel="icon" type="image/svg+xml"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2300d9d9' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><path d='M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z'></path><circle cx='12' cy='11' r='3'></circle></svg>">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <h1 class="logo">
+                <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2.5"
+                    stroke-linecap="round" stroke-linejoin="round"
+                    style="color: var(--accent-primary); margin-right: 8px;">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                    <circle cx="12" cy="11" r="3"></circle>
+                </svg>
+                WatchVault
+            </h1>
+            <div class="header-actions">
+                <button class="btn btn-primary" id="addAnimeBtn">
+                    <span class="btn-icon">+</span> <span class="btn-text">Add Anime</span>
+                </button>
+                <button class="btn btn-secondary" id="profileBtn" style="display: none;" title="Your Profile">
+                    <span class="btn-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+                            <circle cx="12" cy="7" r="4" />
+                        </svg>
+                    </span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Authentication Section -->
+    <section id="authSection" class="auth-section">
+        <div class="container">
+            <div class="auth-card">
+                <div class="auth-header">
+                    <h2 id="authTitle">Welcome to WatchVault</h2>
+                    <p id="authSubtitle">Login to sync your anime journey</p>
+                </div>
+                <form id="authForm">
+                    <div class="form-group">
+                        <label for="authEmail">Email</label>
+                        <input type="email" id="authEmail" required placeholder="name@example.com" autocomplete="email">
+                    </div>
+                    <div class="form-group">
+                        <div class="label-row">
+                            <label for="authPassword">Password</label>
+                            <a href="#" id="forgotPasswordLink" class="auth-helper-link">Forgot?</a>
+                        </div>
+                        <input type="password" id="authPassword" required placeholder="••••••••"
+                            autocomplete="current-password">
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-full" id="authSubmitBtn">
+                        Login
+                    </button>
+                </form>
+
+                <!-- Reset Password View (Hidden by default) -->
+                <form id="resetPasswordForm" style="display: none;">
+                    <div class="form-group">
+                        <label for="resetEmail">Email</label>
+                        <input type="email" id="resetEmail" required placeholder="name@example.com">
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-full">
+                        Send Reset Link
+                    </button>
+                    <div class="auth-footer">
+                        <p><a href="#" id="backToLoginLink">Back to Login</a></p>
+                    </div>
+                </form>
+                <div class="auth-footer">
+                    <p id="authSwitchText">Don't have an account? <a href="#" id="authSwitchLink">Sign Up</a></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- App Content Wrapper (Hidden until login) -->
+    <div id="appContent" style="display: none;">
+        <!-- Controls: Search & Filter -->
+        <section class="controls-section">
+            <div class="container controls-wrapper">
+                <div class="search-box">
+                    <span class="search-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
+                    </span>
+                    <input type="text" id="searchInput" placeholder="Search anime by name..." autocomplete="off">
+                </div>
+
+                <div class="filter-container">
+                    <div class="custom-dropdown" id="customFilterDropdown">
+                        <div class="dropdown-trigger">
+                            <span id="dropdownSelectedText">All Anime</span>
+                            <div class="filter-badge" id="activeFilterBadge">0</div>
+                            <span class="dropdown-arrow">▼</span>
+                        </div>
+                        <div class="dropdown-menu">
+                            <div class="dropdown-item active" data-value="all">All Anime</div>
+                            <div class="dropdown-item" data-value="Watching">Watching</div>
+                            <div class="dropdown-item" data-value="Completed">Completed</div>
+                            <div class="dropdown-item" data-value="Plan to Watch">Plan to Watch</div>
+                            <div class="dropdown-item" data-value="Dropped">Dropped</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="container">
+                <!-- Continue Watching Section -->
+                <section id="continueWatchingSection" class="grid-section">
+                    <h2 class="section-title">Continue Watching</h2>
+                    <div id="continueWatchingGrid" class="anime-grid">
+                        <!-- Dynamic content -->
+                    </div>
+                </section>
+
+                <!-- My Collection Section -->
+                <section id="myCollectionSection" class="grid-section">
+                    <h2 class="section-title">My Collection</h2>
+                    <div id="myCollectionGrid" class="anime-grid">
+                        <!-- Dynamic content -->
+                    </div>
+                </section>
+
+                <div id="emptyState" class="empty-state">
+                    <div class="empty-icon">📺</div>
+                    <h2>No Anime Found</h2>
+                    <p>Start tracking your anime journey by adding your first anime!</p>
+                    <button class="btn btn-primary" onclick="document.getElementById('addAnimeBtn').click()">
+                        Add Your First Anime
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Add/Edit Anime Modal -->
+    <div id="animeModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Add New Anime</h2>
+                <button class="close-btn" id="closeModal">&times;</button>
+            </div>
+            <form id="animeForm">
+                <input type="hidden" id="animeId">
+
+                <div class="form-group">
+                    <label for="animeName">Anime Name *</label>
+                    <input type="text" id="animeName" required placeholder="Enter anime name" autocomplete="off">
+                </div>
+
+                <div class="form-group">
+                    <label for="animeType">Type *</label>
+                    <select id="animeType" required>
+                        <option value="Series">Series</option>
+                        <option value="Movie">Movie</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="animeStatus">Status *</label>
+                    <select id="animeStatus" required>
+                        <option value="Watching">Watching</option>
+                        <option value="Completed">Completed</option>
+                        <option value="Plan to Watch">Plan to Watch</option>
+                        <option value="Dropped">Dropped</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="posterUpload">Poster Image</label>
+                    <div class="file-upload-wrapper">
+                        <input type="file" id="posterUpload" accept="image/*" class="file-input">
+                        <label for="posterUpload" class="file-label">
+                            <span class="file-icon">📁</span>
+                            <span id="fileName">Choose an image file</span>
+                        </label>
+                    </div>
+                    <div id="imagePreview" class="image-preview"></div>
+                </div>
+
+                <!-- Series-specific fields -->
+                <div id="seriesFields" class="series-fields">
+                    <div class="form-group">
+                        <label>Seasons</label>
+                        <div id="seasonsList" class="seasons-list">
+                            <!-- Season inputs will be added here -->
+                        </div>
+                        <button type="button" class="btn btn-secondary" id="addSeasonBtn">
+                            + Add Season
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Movie-specific fields -->
+                <div id="movieFields" class="movie-fields" style="display: none;">
+                    <div class="form-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="movieWatched">
+                            <span>Mark as Watched</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="cancelBtn">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="submitBtn">
+                        <span id="submitBtnText">Add Anime</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="spinner"></div>
+        <p>Loading...</p>
+    </div>
+
+    <!-- Profile Modal -->
+    <div id="profileModal" class="modal">
+        <div class="modal-content profile-modal-content">
+            <div class="modal-header">
+                <div class="header-title-group">
+                    <span class="header-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                            <circle cx="12" cy="7" r="4" />
+                        </svg>
+                    </span>
+                    <h2 id="profileModalTitle">User Profile</h2>
+                </div>
+                <span class="close" id="closeProfileModal">&times;</span>
+            </div>
+
+            <div class="profile-main">
+                <div class="profile-header-card">
+                    <div class="profile-details">
+                        <span class="detail-label">ACCOUNT EMAIL</span>
+                        <div id="userEmailDisplay" class="detail-value"></div>
+                    </div>
+                </div>
+
+                <div class="profile-section">
+                    <div class="section-header">
+                        <span class="section-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" width="18" height="18">
+                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                                <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                            </svg>
+                        </span>
+                        <h3>Update Password</h3>
+                    </div>
+                    <form id="changePasswordForm" class="premium-form">
+                        <div class="form-group">
+                            <label for="newPassword">New Password</label>
+                            <input type="password" id="newPassword" required placeholder="Min 6 characters">
+                        </div>
+                        <div class="form-group">
+                            <label for="confirmNewPassword">Confirm New Password</label>
+                            <input type="password" id="confirmNewPassword" required placeholder="Repeat password">
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">
+                            Update Password
+                        </button>
+                    </form>
+                </div>
+
+                <div class="profile-footer">
+                    <button class="btn btn-danger-link" id="profileLogoutBtn">
+                        <span class="btn-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
+                                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                                <polyline points="16 17 21 12 16 7" />
+                                <line x1="21" y1="12" x2="9" y2="12" />
+                            </svg>
+                        </span>
+                        Logout Account
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="config.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>
