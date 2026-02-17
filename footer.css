@@ -4,8 +4,8 @@
 .app-footer {
     background: linear-gradient(180deg, var(--bg-primary) 0%, #05081a 100%);
     border-top: 1px solid var(--border-color);
-    padding: 60px 0 20px;
-    margin-top: 80px;
+    padding: 30px 0 20px;
+    margin-top: 60px;
     position: relative;
     overflow: hidden;
 }
@@ -26,27 +26,35 @@
     margin: 0 auto;
     padding: 0 20px;
     display: grid;
-    grid-template-columns: 1.5fr 1fr;
-    /* 2-Column Layout */
-    gap: 60px;
+    grid-template-columns: 1fr;
+    /* Single Column for Compact */
+    gap: 20px;
     align-items: center;
     /* Vertically center content */
     text-align: center;
 }
 
 /* Brand Section */
+.footer-brand {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
 .footer-brand .logo {
     display: flex;
     align-items: center;
     justify-content: center;
-    /* Center the logo horizontally */
     gap: 8px;
-    /* Reduced gap since svg has margin */
-    margin-bottom: 16px;
+    margin-bottom: 0;
+    /* Compact */
 }
 
+/* Reduced Font Sizes */
 .footer-brand .logo h1 {
-    font-size: 1.8rem;
+    font-size: 1.4rem;
+    /* Smaller */
     background: linear-gradient(45deg, #fff, #a5b4fc);
     -webkit-background-clip: text;
     background-clip: text;
@@ -56,10 +64,10 @@
 
 .footer-brand p {
     color: var(--text-secondary);
-    line-height: 1.6;
-    font-size: 0.95rem;
-    max-width: 300px;
-    margin: 0 auto;
+    font-size: 0.85rem;
+    /* Smaller */
+    margin: 0;
+    max-width: 100%;
 }
 
 /* Links Section */
@@ -146,17 +154,32 @@
     gap: 16px;
 }
 
+/* Compact Contact Section */
+.footer-contact {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    margin-top: -10px;
+}
+
+.footer-contact h3 {
+    display: none;
+    /* Hide 'Contact' Title */
+}
+
+/* Smaller Icons */
 .social-icon {
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.03);
+    width: 36px;
+    height: 36px;
+    background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.05);
     display: flex;
     align-items: center;
     justify-content: center;
     color: var(--text-secondary);
     transition: all 0.3s ease;
+    border-radius: 50%;
 }
 
 .social-icon:hover {
