@@ -732,6 +732,13 @@ h3 {
     margin-bottom: var(--spacing-sm);
 }
 
+/* Force 4 columns on PC screens as requested */
+@media (min-width: 1024px) {
+    .anime-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
 /* ===================================
    ANIME CARD
    =================================== */
@@ -763,9 +770,12 @@ h3 {
 
 .card-poster {
     width: 100%;
-    height: 280px;
-    /* Reduced from 320px */
-    object-fit: cover;
+    /* aspect-ratio removed for fixed height control */
+    height: 185px;
+    object-fit: contain;
+    /* Shows entire image without cropping */
+    background: #000;
+    /* Black background for letterboxing effect */
     border-top-left-radius: 20px;
     border-top-right-radius: 20px;
 }
